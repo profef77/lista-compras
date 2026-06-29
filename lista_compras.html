@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Lista de Compras</title>
+    <meta name="theme-color" content="#3b6cf5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Compras">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #eef1f8;
+            --bg-gradient: linear-gradient(135deg, #e8ecf4 0%, #dce3f0 50%, #e4e9f4 100%);
+            --card-bg: rgba(255,255,255,0.82);
+            --card-border: rgba(255,255,255,0.6);
+            --card-shadow: 0 8px 32px rgba(100,120,160,0.10), 0 2px 8px rgba(100,120,160,0.06);
+            --text-primary: #1b2537;
+            --text-secondary: #6c7a92;
+            --text-muted: #9aa8bc;
+            --border: rgba(0,0,0,0.06);
+            --border-strong: rgba(0,0,0,0.10);
+            --input-bg: rgba(255,255,255,0.7);
+            --input-border: rgba(0,0,0,0.08);
+            --input-focus: #3b6cf5;
+            --input-focus-ring: rgba(59,108,245,0.12);
+            --primary: #3b6cf5;
+            --primary-hover: #2f5de0;
+            --primary-light: #eef2ff;
+            --primary-glow: rgba(59,108,245,0.35);
+            --gradient-primary: linear-gradient(135deg, #3b6cf5 0%, #6c5ce7 100%);
+            --gradient-primary-hover: linear-gradient(135deg, #2f5de0 0%, #5a4bd4 100%);
+            --danger: #f04444;
+            --danger-light: #fef2f2;
+            --danger-hover: #dc3030;
+            --tab-bg: rgba(0,0,0,0.04);
+            --tab-hover: rgba(0,0,0,0.07);
+            --tab-active-bg: var(--gradient-primary);
+            --tab-text: #5a6a80;
+            --toggle-bg: rgba(0,0,0,0.05);
+            --toggle-hover: rgba(0,0,0,0.08);
+            --check-border: rgba(0,0,0,0.12);
+            --item-hover: rgba(59,108,245,0.04);
+            --category-color: #8896ab;
+            --empty-color: #a0aec0;
+            --overlay: rgba(15,20,40,0.35);
+            --modal-bg: rgba(255,255,255,0.95);
+            --modal-border: rgba(255,255,255,0.8);
+            --modal-shadow: 0 24px 80px rgba(100,120,180,0.25), 0 8px 24px rgba(100,120,180,0.12);
+            --notification-bg: #1b2537;
+            --notification-text: #ffffff;
+            --badge-bg: rgba(0,0,0,0.07);
+        }
+
+        .dark-theme {
+            --bg: #080c18;
+            --bg-gradient: linear-gradient(135deg, #0a0f22 0%, #0e1428 50%, #0b1020 100%);
+            --card-bg: rgba(22,30,50,0.82);
+            --card-border: rgba(255,255,255,0.06);
+            --card-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+            --text-primary: #edf0f7;
+            --text-secondary: #8b98b0;
+            --text-muted: #5a6680;
+            --border: rgba(255,255,255,0.06);
+            --border-strong: rgba(255,255,255,0.10);
+            --input-bg: rgba(255,255,255,0.05);
+            --input-border: rgba(255,255,255,0.08);
+            --input-focus: #5b8af7;
+            --input-focus-ring: rgba(91,138,247,0.15);
+            --primary: #5b8af7;
+            --primary-hover: #4a78e8;
+            --primary-light: rgba(91,138,247,0.1);
+            --primary-glow: rgba(91,138,247,0.3);
+            --gradient-primary: linear-gradient(135deg, #5b8af7 0%, #8b7cf7 100%);
+            --gradient-primary-hover: linear-gradient(135deg, #4a78e8 0%, #7a6be8 100%);
+            --danger: #f55555;
+            --danger-light: rgba(245,85,85,0.1);
+            --danger-hover: #e44444;
+            --tab-bg: rgba(255,255,255,0.05);
+            --tab-hover: rgba(255,255,255,0.08);
+            --tab-text: #8b98b0;
+            --toggle-bg: rgba(255,255,255,0.06);
+            --toggle-hover: rgba(255,255,255,0.1);
+            --check-border: rgba(255,255,255,0.12);
+            --item-hover: rgba(91,138,247,0.06);
+            --category-color: #6b7a94;
+            --empty-color: #4a5568;
+            --overlay: rgba(0,0,0,0.55);
+            --modal-bg: rgba(22,30,50,0.95);
+            --modal-border: rgba(255,255,255,0.08);
+            --modal-shadow: 0 24px 80px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.3);
+            --notification-bg: #edf0f7;
+            --notification-text: #1b2537;
+            --badge-bg: rgba(255,255,255,0.08);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            background-image: var(--bg-gradient);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px 16px;
+            margin: 0;
+            transition: background 0.4s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #app {
+            max-width: 480px;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 28px 22px 32px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        /* ---------- HEADER ---------- */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: var(--toggle-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            font-size: 17px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .icon-btn:hover { background: var(--toggle-hover); transform: translateY(-1px); }
+        .icon-btn:active { transform: scale(0.92) translateY(0); }
+        #undoBtn { opacity: 0.35; pointer-events: none; }
+        #undoBtn.active {
+            opacity: 1;
+            pointer-events: auto;
+            background: var(--primary-light);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--input-focus-ring);
+        }
+        #undoBtn.active:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* ---------- SUB-HEADER ---------- */
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 16px 0 18px 0;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .stats {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .stat-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .stat-remaining {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .stat-total {
+            background: var(--tab-bg);
+            color: var(--text-secondary);
+        }
+
+        .stat-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.6;
+        }
+
+        /* ---------- FORMULÁRIO ---------- */
+        .add-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .input-group {
+            flex: 2;
+            min-width: 0;
+        }
+
+        #itemInput {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 500;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            transition: all 0.25s ease;
+            outline: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        #itemInput:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px var(--input-focus-ring);
+        }
+        #itemInput::placeholder { color: var(--text-muted); font-weight: 400; }
+        #itemInput.input-error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 4px rgba(240,68,68,0.1) !important;
+            animation: shake 0.35s ease;
+        }
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-4px); }
+            40% { transform: translateX(4px); }
+            60% { transform: translateX(-3px); }
+            80% { transform: translateX(2px); }
+        }
+
+        #addBtn {
+            width: 50px;
+            min-width: 50px;
+            height: 50px;
+            padding: 0;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 22px;
+            font-family: inherit;
+            font-weight: 400;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px var(--primary-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        #addBtn:hover {
+            box-shadow: 0 6px 24px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+        #addBtn:active {
+            transform: scale(0.93) translateY(0);
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        /* ---------- TABS ---------- */
+        .tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 2px 0 16px 0;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab-btn {
+            flex: 0 0 auto;
+            padding: 7px 14px;
+            border-radius: 10px;
+            border: 1.5px solid transparent;
+            background: var(--tab-bg);
+            color: var(--tab-text);
+            font-size: 12.5px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+        .tab-btn:hover {
+            background: var(--tab-hover);
+            border-color: var(--border-strong);
+        }
+        .tab-btn:active { transform: scale(0.95); }
+        .tab-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 3px 12px var(--primary-glow);
+        }
+        .tab-btn .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            background: var(--badge-bg);
+            color: inherit;
+            border-radius: 6px;
+            padding: 0 5px;
+            margin-left: 5px;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .tab-btn.active .badge {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* ---------- LISTA ---------- */
+        .list-container {
+            margin-top: 6px;
+            min-height: 100px;
+        }
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 14px 12px;
+            border-radius: 14px;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+            background: transparent;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .item:hover {
+            background: var(--item-hover);
+            border-color: var(--border);
+        }
+        .item:active { transform: scale(0.995); }
+
+        .item-check {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            border-radius: 8px;
+            border: 2px solid var(--check-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 14px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: var(--card-bg);
+            position: relative;
+        }
+        .item-check:hover { border-color: var(--primary); }
+        .item-check:active { transform: scale(0.85); }
+        .item-check.checked {
+            background: var(--gradient-primary);
+            border-color: transparent;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+        .item-check.checked::after {
+            content: "";
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) translateY(-1px);
+        }
+
+        .item-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .item-text {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            word-break: break-word;
+            transition: all 0.25s ease;
+            line-height: 1.4;
+        }
+        .item-text.checked-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .item-category {
+            display: inline-block;
+            font-size: 10.5px;
+            color: var(--category-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+
+        .item-delete {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+            opacity: 0;
+        }
+        .item:hover .item-delete { opacity: 1; }
+        .item-delete:hover {
+            background: var(--danger-light);
+            color: var(--danger);
+        }
+        .item-delete:active { transform: scale(0.85); }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+        }
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 14px;
+            opacity: 0.9;
+        }
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .empty-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ---------- BARCODE SCANNER ---------- */
+        .scanner-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.92);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .scanner-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scanner-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            z-index: 10;
+        }
+
+        .scanner-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .scanner-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .scanner-close:hover { background: rgba(255,255,255,0.2); }
+
+        .scanner-video-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .scanner-video-wrap video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .scanner-crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px;
+            height: 120px;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 16px;
+            pointer-events: none;
+        }
+        .scanner-crosshair::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--primary);
+            box-shadow: 0 0 12px var(--primary-glow);
+            animation: scanLine 2s ease-in-out infinite;
+        }
+        @keyframes scanLine {
+            0%, 100% { top: 20%; }
+            50% { top: 80%; }
+        }
+
+        .scanner-status {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            min-height: 22px;
+            transition: all 0.2s;
+        }
+        .scanner-status.found {
+            color: #4ade80;
+            font-weight: 700;
+        }
+
+        .scanner-barcode-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .scanner-manual {
+            margin-top: 24px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .scanner-manual input {
+            padding: 12px 16px;
+            border: 1.5px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 500;
+            outline: none;
+            width: 200px;
+            transition: border-color 0.2s;
+        }
+        .scanner-manual input::placeholder { color: rgba(255,255,255,0.35); }
+        .scanner-manual input:focus { border-color: var(--primary); }
+
+        .scanner-manual button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .scanner-manual button:hover { opacity: 0.9; }
+
+        .scanner-not-supported {
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 40px;
+            line-height: 1.6;
+        }
+        .scanner-not-supported a {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        #barcodeScanBtn {
+            width: 50px;
+            min-width: 50px;
+            height: 50px;
+            padding: 0;
+            background: var(--tab-bg);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+        }
+        #barcodeScanBtn:hover {
+            background: var(--tab-hover);
+            border-color: var(--border-strong);
+            transform: translateY(-1px);
+        }
+        #barcodeScanBtn:active { transform: scale(0.93) translateY(0); }
+
+        /* ---------- AÇÕES ---------- */
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+            border-top: 1px solid var(--border);
+            padding-top: 22px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1.5px solid transparent;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-action:hover { transform: translateY(-1px); }
+        .btn-action:active { transform: scale(0.97) translateY(0); }
+
+        .btn-secondary {
+            background: var(--tab-bg);
+            color: var(--text-secondary);
+            border-color: var(--border);
+        }
+        .btn-secondary:hover {
+            background: var(--tab-hover);
+            border-color: var(--border-strong);
+        }
+
+        .btn-danger {
+            background: var(--danger-light);
+            color: var(--danger);
+            border-color: transparent;
+        }
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 16px rgba(240,68,68,0.3);
+        }
+
+        /* ---------- MODAL ---------- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--overlay);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            padding: 24px;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--modal-bg);
+            border: 1px solid var(--modal-border);
+            border-radius: 24px;
+            padding: 32px 28px 28px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: var(--modal-shadow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.open .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+        }
+        .modal-icon.edit {
+            background: var(--primary-light);
+        }
+        .modal-icon.danger {
+            background: var(--danger-light);
+        }
+
+        .modal h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
+        }
+
+        .modal p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 22px;
+            line-height: 1.5;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 500;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.25s ease;
+            margin-bottom: 24px;
+        }
+        .modal-input:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px var(--input-focus-ring);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .modal-btn:hover { transform: translateY(-1px); }
+        .modal-btn:active { transform: scale(0.96) translateY(0); }
+
+        .modal-btn-cancel {
+            background: var(--tab-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .modal-btn-cancel:hover { background: var(--tab-hover); }
+
+        .modal-btn-confirm {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+        .modal-btn-confirm:hover { box-shadow: 0 6px 20px var(--primary-glow); }
+
+        .modal-btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(240,68,68,0.3);
+        }
+        .modal-btn-danger:hover {
+            background: var(--danger-hover);
+            box-shadow: 0 6px 20px rgba(240,68,68,0.35);
+        }
+
+        /* ---------- NOTIFICAÇÃO ---------- */
+        .notification {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(12px);
+            background: var(--notification-bg);
+            color: var(--notification-text);
+            padding: 12px 24px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 14px;
+            font-family: inherit;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 999;
+            max-width: 90%;
+            text-align: center;
+            letter-spacing: -0.1px;
+        }
+        .notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ---------- ANIMATIONS ---------- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .item { animation: fadeInUp 0.25s ease backwards; }
+
+        /* ---------- MISC ---------- */
+        input[list]::-webkit-calendar-picker-indicator { opacity: 0.4; }
+        .dark-theme input[list]::-webkit-calendar-picker-indicator { filter: invert(0.7); }
+
+        @media (max-width: 400px) {
+            #app { padding: 20px 16px 28px; border-radius: 22px; }
+        }
+
+        /* ---------- LOCK SCREEN ---------- */
+        .lock-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            background-image: var(--bg-gradient);
+            z-index: 5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .lock-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .lock-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 40px 32px 36px;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            text-align: center;
+        }
+
+        .lock-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-primary);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 20px;
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .lock-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .lock-sub {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .lock-input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 14px;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: 500;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            outline: none;
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 16px;
+            transition: all 0.25s ease;
+        }
+        .lock-input:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 4px var(--input-focus-ring);
+        }
+        .lock-input.error {
+            border-color: var(--danger) !important;
+            animation: shake 0.35s ease;
+        }
+
+        .lock-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 16px var(--primary-glow);
+        }
+        .lock-btn:hover {
+            box-shadow: 0 6px 24px var(--primary-glow);
+            transform: translateY(-1px);
+        }
+        .lock-btn:active { transform: scale(0.97) translateY(0); }
+
+        .lock-error {
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 600;
+            min-height: 20px;
+            margin-top: 8px;
+        }
+
+        .lock-copyright {
+            margin-top: 20px;
+            font-size: 11px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .lock-change-btn {
+            margin-top: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .lock-change-btn:hover { opacity: 1; }
+
+        .app-footer {
+            text-align: center;
+            padding: 16px 0 0 0;
+            font-size: 11px;
+            color: var(--text-muted);
+            opacity: 0.5;
+            border-top: 1px solid var(--border);
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Lock Screen -->
+    <div class="lock-screen" id="lockScreen">
+        <div class="lock-card">
+            <div class="lock-icon">🔒</div>
+            <div class="lock-title" id="lockTitle">Criar Senha</div>
+            <div class="lock-sub" id="lockSub">Define uma senha para proteger a tua lista</div>
+            <input type="password" class="lock-input" id="lockInput" placeholder="••••" inputmode="numeric" maxlength="8" autocomplete="off">
+            <button class="lock-btn" id="lockBtn">Continuar</button>
+            <div class="lock-error" id="lockError"></div>
+            <div class="lock-copyright">© 2026 Profef</div>
+            <button class="lock-change-btn" id="lockChangeBtn" style="display:none">Alterar senha</button>
+        </div>
+    </div>
+
+    <div id="app" style="display:none">
+        <div class="header-row">
+            <div class="logo">
+                <div class="logo-icon">🛒</div>
+                <h1>Compras</h1>
+            </div>
+            <div class="header-actions">
+                <button id="undoBtn" class="icon-btn" aria-label="Desfazer última ação">↩️</button>
+                <button id="themeToggle" class="icon-btn" aria-label="Alternar tema claro/escuro">🌙</button>
+            </div>
+        </div>
+
+        <div class="sub-header">
+            <div class="stats">
+                <span class="stat-pill stat-remaining" id="remainingCount" aria-live="polite">
+                    <span class="stat-dot"></span>
+                    0 por comprar
+                </span>
+                <span class="stat-pill stat-total" id="totalCount" aria-live="polite">0 total</span>
+            </div>
+        </div>
+
+        <div class="add-section">
+            <div class="input-group">
+                <input type="text" id="itemInput" placeholder="Adicionar item..." list="suggestionsList" autocomplete="off" aria-label="Nome do item a adicionar">
+                <datalist id="suggestionsList"></datalist>
+            </div>
+            <button id="barcodeScanBtn" aria-label="Digitalizar código de barras">📷</button>
+            <button id="addBtn" aria-label="Adicionar item">+</button>
+        </div>
+
+        <div class="tabs-container" id="tabsContainer" role="tablist" aria-label="Filtrar por categoria"></div>
+
+        <div class="list-container" id="listContainer" role="list" aria-label="Lista de compras">
+            <div class="empty-state">
+                <div class="empty-icon">🛒</div>
+                <div class="empty-title">A lista está vazia</div>
+                <div class="empty-sub">Adiciona o que precisas em cima</div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-action btn-secondary" id="clearCheckedBtn" aria-label="Limpar itens já comprados">🗑</button>
+            <button class="btn-action btn-danger" id="clearAllBtn" aria-label="Apagar toda a lista">🗑</button>
+        </div>
+
+        <div class="app-footer">© 2026 Profef · Lista de Compras</div>
+    </div>
+
+    <div id="notification" class="notification" role="status" aria-live="polite"></div>
+
+    <div id="editModal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Editar item">
+        <div class="modal">
+            <div class="modal-icon edit">✏️</div>
+            <h2>Editar item</h2>
+            <p>Altera o nome do item:</p>
+            <input type="text" id="editModalInput" class="modal-input" aria-label="Novo nome do item">
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" id="editModalCancel">Cancelar</button>
+                <button class="modal-btn modal-btn-confirm" id="editModalConfirm">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="clearAllModal" class="modal-overlay" role="alertdialog" aria-modal="true" aria-label="Confirmar apagar tudo">
+        <div class="modal">
+            <div class="modal-icon danger">⚠️</div>
+            <h2>Apagar toda a lista?</h2>
+            <p>Vai remover todos os itens. Podes desfazer depois se mudares de ideias.</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-cancel" id="clearAllModalCancel">Manter</button>
+                <button class="modal-btn modal-btn-danger" id="clearAllModalConfirm">Apagar tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scanner de Código de Barras -->
+    <div id="scannerOverlay" class="scanner-overlay">
+        <div class="scanner-header">
+            <span class="scanner-title">Digitalizar código de barras</span>
+            <button class="scanner-close" id="scannerClose" aria-label="Fechar scanner">&times;</button>
+        </div>
+        <div class="scanner-video-wrap">
+            <video id="scannerVideo" autoplay playsinline muted></video>
+            <div class="scanner-crosshair"></div>
+        </div>
+        <div class="scanner-status" id="scannerStatus">A procurar código de barras...</div>
+        <div class="scanner-manual">
+            <input type="text" id="manualBarcode" placeholder="Ou digita o código..." inputmode="numeric">
+            <button id="manualBarcodeBtn">OK</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // ---------- PASSWORD / LOCK SCREEN ----------
+        var PWD_KEY = 'shoppingListPWD';
+        var PWD_HASH_KEY = 'shoppingListPWDHash';
+        var lockScreen = document.getElementById('lockScreen');
+        var lockTitle = document.getElementById('lockTitle');
+        var lockSub = document.getElementById('lockSub');
+        var lockInput = document.getElementById('lockInput');
+        var lockBtn = document.getElementById('lockBtn');
+        var lockError = document.getElementById('lockError');
+        var lockChangeBtn = document.getElementById('lockChangeBtn');
+        var appDiv = document.getElementById('app');
+
+        async function hashPassword(pwd) {
+            var enc = new TextEncoder().encode(pwd);
+            var hash = await crypto.subtle.digest('SHA-256', enc);
+            return Array.from(new Uint8Array(hash)).map(function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+        }
+
+        async function handleLock() {
+            var storedHash = localStorage.getItem(PWD_HASH_KEY);
+            if (!storedHash) {
+                // Primeira vez — criar senha
+                lockTitle.textContent = 'Criar Senha';
+                lockSub.textContent = 'Define uma senha para proteger a tua lista';
+                lockBtn.textContent = 'Criar Senha';
+                lockChangeBtn.style.display = 'none';
+            } else {
+                // Pedir senha
+                lockTitle.textContent = 'Bem-vindo(a)';
+                lockSub.textContent = 'Introduz a senha para aceder';
+                lockBtn.textContent = 'Entrar';
+                lockChangeBtn.style.display = 'block';
+            }
+            lockInput.value = '';
+            lockError.textContent = '';
+        }
+
+        async function submitLock() {
+            var pwd = lockInput.value.trim();
+            if (pwd.length < 1) {
+                lockError.textContent = 'Introduz uma senha';
+                lockInput.classList.add('error');
+                setTimeout(function() { lockInput.classList.remove('error'); }, 400);
+                return;
+            }
+            var storedHash = localStorage.getItem(PWD_HASH_KEY);
+            if (!storedHash) {
+                // Criar nova senha
+                var hash = await hashPassword(pwd);
+                localStorage.setItem(PWD_HASH_KEY, hash);
+                unlock();
+            } else {
+                // Verificar senha
+                var hash = await hashPassword(pwd);
+                if (hash === storedHash) {
+                    unlock();
+                } else {
+                    lockError.textContent = 'Senha incorreta';
+                    lockInput.classList.add('error');
+                    lockInput.value = '';
+                    setTimeout(function() { lockInput.classList.remove('error'); }, 400);
+                }
+            }
+        }
+
+        function unlock() {
+            lockScreen.classList.add('hidden');
+            appDiv.style.display = '';
+            // Init normal da app
+            initApp();
+        }
+
+        function changePassword() {
+            localStorage.removeItem(PWD_HASH_KEY);
+            lockTitle.textContent = 'Criar Nova Senha';
+            lockSub.textContent = 'Define uma nova senha';
+            lockBtn.textContent = 'Criar Senha';
+            lockChangeBtn.style.display = 'none';
+            lockInput.value = '';
+            lockError.textContent = '';
+            lockInput.focus();
+        }
+
+        lockBtn.addEventListener('click', submitLock);
+        lockInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); submitLock(); }
+        });
+        lockChangeBtn.addEventListener('click', changePassword);
+
+        // Inicia o ecrã de bloqueio
+        handleLock();
+        lockInput.focus();
+
+        // ---------- CATEGORIAS ----------
+        var categoryMap = [
+            { keywords: ['pão', 'bolo', 'croissant', 'broa'], category: 'Padaria' },
+            { keywords: ['leite', 'ovos', 'manteiga', 'queijo', 'iogurte', 'natas'], category: 'Laticínios' },
+            { keywords: ['maçã', 'banana', 'laranja', 'pera', 'uva', 'melão', 'morango', 'kiwi', 'ananás', 'limão'], category: 'Frutas' },
+            { keywords: ['alface', 'tomate', 'cebola', 'batata', 'cenoura', 'abóbora', 'couve', 'espinafre', 'brócolos', 'alho'], category: 'Legumes' },
+            { keywords: ['frango', 'carne', 'porco', 'vaca', 'borrego', 'peru', 'bife', 'costeleta', 'presunto'], category: 'Carnes' },
+            { keywords: ['salmão', 'atum', 'bacalhau', 'pescada', 'camarão', 'dourada', 'robalo'], category: 'Peixe' },
+            { keywords: ['arroz', 'massa', 'esparguete', 'feijão', 'grão', 'lentilhas', 'farinha', 'açúcar', 'sal', 'azeite', 'vinagre', 'café', 'chá'], category: 'Mercearia' },
+            { keywords: ['gelado', 'pizza', 'legumes congelados', 'peixe congelado', 'marisco congelado', 'sopa congelada'], category: 'Congelados' },
+            { keywords: ['vinho', 'cerveja', 'sumo', 'refrigerante', 'água', 'leite achocolatado', 'bebida', 'coca', 'fanta', 'água com gás'], category: 'Bebidas' },
+            { keywords: ['detergente', 'lixívia', 'amaciador', 'sabão'], category: 'Limpeza' },
+            { keywords: ['papel', 'champô', 'gel', 'pasta', 'escova', 'fralda', 'toalhita'], category: 'Higiene' }
+        ];
+
+        var ALL_CATEGORIES = ['Todas', 'Padaria', 'Laticínios', 'Frutas', 'Legumes', 'Carnes', 'Peixe', 'Mercearia', 'Congelados', 'Bebidas', 'Limpeza', 'Higiene', 'Outros'];
+
+        function getCategory(name) {
+            var lower = name.toLowerCase().trim();
+            for (var i = 0; i < categoryMap.length; i++) {
+                var entry = categoryMap[i];
+                for (var j = 0; j < entry.keywords.length; j++) {
+                    if (lower.indexOf(entry.keywords[j]) !== -1) return entry.category;
+                }
+            }
+            return 'Outros';
+        }
+
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+        }
+
+        // ---------- ESTADO ----------
+        var items = [];
+        var undoStack = [];
+        var MAX_UNDO = 20;
+        var STORAGE_KEY = 'shoppingListPT';
+        var THEME_KEY = 'shoppingThemePT';
+        var activeCategory = 'Todas';
+
+        // ---------- DOM ----------
+        var input = document.getElementById('itemInput');
+        var addBtn = document.getElementById('addBtn');
+        var listContainer = document.getElementById('listContainer');
+        var remainingSpan = document.getElementById('remainingCount');
+        var totalSpan = document.getElementById('totalCount');
+        var clearCheckedBtn = document.getElementById('clearCheckedBtn');
+        var clearAllBtn = document.getElementById('clearAllBtn');
+        var suggestionsDataList = document.getElementById('suggestionsList');
+        var themeToggle = document.getElementById('themeToggle');
+        var undoBtn = document.getElementById('undoBtn');
+        var tabsContainer = document.getElementById('tabsContainer');
+        var notificationEl = document.getElementById('notification');
+        var editModal = document.getElementById('editModal');
+        var editModalInput = document.getElementById('editModalInput');
+        var editModalCancel = document.getElementById('editModalCancel');
+        var editModalConfirm = document.getElementById('editModalConfirm');
+        var clearAllModal = document.getElementById('clearAllModal');
+        var clearAllModalCancel = document.getElementById('clearAllModalCancel');
+        var clearAllModalConfirm = document.getElementById('clearAllModalConfirm');
+        var notificationTimeout = null;
+
+        // ---------- NOTIFICAÇÃO ----------
+        function showNotification(msg, duration) {
+            duration = duration || 2000;
+            if (notificationTimeout) clearTimeout(notificationTimeout);
+            notificationEl.textContent = msg;
+            notificationEl.classList.add('show');
+            notificationTimeout = setTimeout(function() {
+                notificationEl.classList.remove('show');
+            }, duration);
+        }
+
+        // ---------- TEMA ----------
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark-theme');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.classList.remove('dark-theme');
+                themeToggle.textContent = '🌙';
+            }
+            localStorage.setItem(THEME_KEY, theme);
+        }
+        var savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+        setTheme(savedTheme);
+        themeToggle.addEventListener('click', function() {
+            var isDark = document.documentElement.classList.contains('dark-theme');
+            setTheme(isDark ? 'light' : 'dark');
+        });
+
+        // ---------- PERSISTÊNCIA ----------
+        function loadItems() {
+            try {
+                var saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    items = JSON.parse(saved);
+                    items = items.map(function(item) {
+                        return Object.assign({}, item, {
+                            checked: item.checked || false,
+                            id: item.id || generateId()
+                        });
+                    });
+                } else {
+                    items = [];
+                }
+            } catch (e) { items = []; }
+        }
+
+        function saveItems() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+            updateUndoButton();
+            renderTabs();
+            render();
+        }
+
+        // ---------- UNDO ----------
+        function pushUndo(action, data) {
+            undoStack.push({ action: action, data: data });
+            if (undoStack.length > MAX_UNDO) undoStack.shift();
+            updateUndoButton();
+        }
+
+        function popUndo() {
+            if (undoStack.length === 0) return null;
+            return undoStack.pop();
+        }
+
+        function updateUndoButton() {
+            if (undoStack.length > 0) {
+                undoBtn.classList.add('active');
+            } else {
+                undoBtn.classList.remove('active');
+            }
+        }
+
+        function undoLastAction() {
+            var entry = popUndo();
+            if (!entry) {
+                showNotification('Nada para desfazer', 1500);
+                return;
+            }
+            var action = entry.action;
+            var data = entry.data;
+            var idx;
+            switch (action) {
+                case 'add':
+                    idx = items.findIndex(function(it) { return it.id === data.id; });
+                    if (idx !== -1) {
+                        items.splice(idx, 1);
+                        saveItems();
+                        showNotification('Desfeito: "' + data.name + '"', 1500);
+                    } else showNotification('Não foi possível desfazer', 1500);
+                    break;
+                case 'delete':
+                    items.push(data);
+                    saveItems();
+                    showNotification('Restaurado: "' + data.name + '"', 1500);
+                    break;
+                case 'toggle':
+                    idx = items.findIndex(function(it) { return it.id === data.id; });
+                    if (idx !== -1) {
+                        items[idx].checked = data.previousState;
+                        saveItems();
+                        showNotification('Desfeito: "' + data.name + '"', 1500);
+                    } else showNotification('Não foi possível desfazer', 1500);
+                    break;
+                case 'clearChecked':
+                    data.forEach(function(item) { items.push(item); });
+                    saveItems();
+                    showNotification(data.length + ' itens restaurados', 1500);
+                    break;
+                case 'clearAll':
+                    data.forEach(function(item) { items.push(item); });
+                    saveItems();
+                    showNotification(data.length + ' itens restaurados', 1500);
+                    break;
+                case 'edit':
+                    idx = items.findIndex(function(it) { return it.id === data.id; });
+                    if (idx !== -1) {
+                        items[idx].name = data.oldName;
+                        items[idx].category = data.oldCategory;
+                        saveItems();
+                        showNotification('Editado para "' + data.oldName + '"', 1500);
+                    } else showNotification('Não foi possível desfazer', 1500);
+                    break;
+                default:
+                    showNotification('Ação desconhecida', 1500);
+            }
+        }
+        undoBtn.addEventListener('click', undoLastAction);
+
+        // ---------- MODAIS ----------
+        var modalCallback = null;
+
+        function openEditModal(item, index) {
+            editModalInput.value = item.name;
+            editModal.classList.add('open');
+            setTimeout(function() {
+                editModalInput.focus();
+                editModalInput.select();
+            }, 50);
+
+            modalCallback = function(confirmed) {
+                editModal.classList.remove('open');
+                if (!confirmed) return;
+                var trimmed = editModalInput.value.trim();
+                if (trimmed === '' || trimmed === item.name) return;
+                var exists = items.some(function(it, i) { return i !== index && it.name.toLowerCase() === trimmed.toLowerCase(); });
+                if (exists) { showNotification('Já existe esse nome.', 1500); return; }
+                var oldName = item.name;
+                var oldCategory = item.category;
+                item.name = trimmed;
+                item.category = getCategory(trimmed);
+                pushUndo('edit', { id: item.id, oldName: oldName, oldCategory: oldCategory });
+                saveItems();
+                showNotification('Editado: "' + oldName + '" → "' + trimmed + '"', 1500);
+            };
+        }
+
+        function openClearAllModal() {
+            if (items.length === 0) return;
+            clearAllModal.classList.add('open');
+            modalCallback = function(confirmed) {
+                clearAllModal.classList.remove('open');
+                if (!confirmed) return;
+                var copy = items.map(function(item) { return Object.assign({}, item); });
+                items = [];
+                pushUndo('clearAll', copy);
+                saveItems();
+                showNotification('Lista apagada.', 1500);
+            };
+        }
+
+        editModalCancel.addEventListener('click', function() { if (modalCallback) modalCallback(false); });
+        editModalConfirm.addEventListener('click', function() { if (modalCallback) modalCallback(true); });
+        clearAllModalCancel.addEventListener('click', function() { if (modalCallback) modalCallback(false); });
+        clearAllModalConfirm.addEventListener('click', function() { if (modalCallback) modalCallback(true); });
+
+        editModalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); if (modalCallback) modalCallback(true); }
+            if (e.key === 'Escape') { if (modalCallback) modalCallback(false); }
+        });
+
+        [editModal, clearAllModal].forEach(function(overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay && modalCallback) modalCallback(false);
+            });
+        });
+
+        // ---------- RENDER TABS ----------
+        function renderTabs() {
+            var counts = {};
+            ALL_CATEGORIES.forEach(function(cat) { counts[cat] = 0; });
+            items.forEach(function(item) {
+                if (counts[item.category] !== undefined) counts[item.category]++;
+                else counts['Outros']++;
+            });
+            counts['Todas'] = items.length;
+
+            var html = '';
+            ALL_CATEGORIES.forEach(function(cat) {
+                var count = counts[cat] || 0;
+                var activeClass = (activeCategory === cat) ? ' active' : '';
+                html += '<button class="tab-btn' + activeClass + '" data-category="' + cat + '" role="tab" aria-selected="' + (activeCategory === cat) + '">' +
+                    cat + '<span class="badge">' + count + '</span></button>';
+            });
+            tabsContainer.innerHTML = html;
+
+            tabsContainer.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var cat = this.dataset.category;
+                    if (cat && cat !== activeCategory) {
+                        activeCategory = cat;
+                        renderTabs();
+                        render();
+                    }
+                });
+            });
+        }
+
+        // ---------- RENDER LISTA ----------
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function render() {
+            var remaining = items.filter(function(item) { return !item.checked; }).length;
+            var total = items.length;
+            remainingSpan.innerHTML = '<span class="stat-dot"></span>' + remaining + ' por comprar';
+            totalSpan.textContent = total + ' total';
+
+            var filteredItems = items;
+            if (activeCategory !== 'Todas') {
+                filteredItems = items.filter(function(item) { return item.category === activeCategory; });
+            }
+
+            if (filteredItems.length === 0) {
+                var emptyHtml = items.length === 0
+                    ? '<div class="empty-state"><div class="empty-icon">🛒</div><div class="empty-title">A lista está vazia</div><div class="empty-sub">Adiciona o que precisas em cima</div></div>'
+                    : '<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nenhum item nesta categoria</div><div class="empty-sub">Tenta ver noutra aba</div></div>';
+                listContainer.innerHTML = emptyHtml;
+                return;
+            }
+
+            var html = '';
+            filteredItems.forEach(function(item) {
+                var checkedClass = item.checked ? ' checked' : '';
+                var textClass = item.checked ? ' checked-text' : '';
+                html +=
+                    '<div class="item" role="listitem" data-id="' + item.id + '">' +
+                        '<div class="item-check' + checkedClass + '" data-action="toggle" data-id="' + item.id + '" aria-label="' + (item.checked ? 'Desmarcar' : 'Marcar') + ' ' + escapeHtml(item.name) + '" role="checkbox" aria-checked="' + item.checked + '"></div>' +
+                        '<div class="item-body">' +
+                            '<div class="item-text' + textClass + '" data-action="edit" data-id="' + item.id + '">' + escapeHtml(item.name) + '</div>' +
+                            '<div class="item-category">' + escapeHtml(item.category) + '</div>' +
+                        '</div>' +
+                        '<button class="item-delete" data-action="delete" data-id="' + item.id + '" aria-label="Remover ' + escapeHtml(item.name) + '">&times;</button>' +
+                    '</div>';
+            });
+            listContainer.innerHTML = html;
+            updateDatalist();
+            updateUndoButton();
+        }
+
+        function updateDatalist() {
+            var names = items.map(function(item) { return item.name; });
+            var unique = [];
+            names.forEach(function(n) { if (unique.indexOf(n) === -1) unique.push(n); });
+            suggestionsDataList.innerHTML = unique.map(function(n) {
+                return '<option value="' + escapeHtml(n) + '">';
+            }).join('');
+        }
+
+        // ---------- MANIPULAÇÃO ----------
+        function showInputError() {
+            input.classList.add('input-error');
+            setTimeout(function() { input.classList.remove('input-error'); }, 1500);
+        }
+
+        function addItem(name) {
+            var trimmed = name.trim();
+            if (trimmed === '') return false;
+            var exists = items.some(function(item) { return item.name.toLowerCase() === trimmed.toLowerCase(); });
+            if (exists) { showInputError(); return false; }
+
+            var category = getCategory(trimmed);
+            var newItem = { id: generateId(), name: trimmed, category: category, checked: false };
+            items.push(newItem);
+            pushUndo('add', Object.assign({}, newItem));
+            saveItems();
+            input.value = '';
+            input.focus();
+            showNotification('Adicionado: "' + trimmed + '"', 1000);
+            return true;
+        }
+
+        function findItemById(id) {
+            return items.findIndex(function(it) { return it.id === id; });
+        }
+
+        function toggleItem(id) {
+            var idx = findItemById(id);
+            if (idx === -1) return;
+            var item = items[idx];
+            var previousState = item.checked;
+            item.checked = !item.checked;
+            pushUndo('toggle', { id: item.id, name: item.name, previousState: previousState });
+            saveItems();
+            showNotification(item.checked ? '✓ ' + item.name : '↺ ' + item.name, 800);
+        }
+
+        function deleteItem(id) {
+            var idx = findItemById(id);
+            if (idx === -1) return;
+            var removed = items.splice(idx, 1)[0];
+            pushUndo('delete', Object.assign({}, removed));
+            saveItems();
+            showNotification('Removido: "' + removed.name + '"', 1000);
+        }
+
+        function clearChecked() {
+            var checkedItems = items.filter(function(item) { return item.checked; });
+            if (checkedItems.length === 0) { showNotification('Nenhum item comprado.', 1500); return; }
+            var copy = checkedItems.map(function(item) { return Object.assign({}, item); });
+            items = items.filter(function(item) { return !item.checked; });
+            pushUndo('clearChecked', copy);
+            saveItems();
+            showNotification(copy.length + ' itens limpos.', 1500);
+        }
+
+        // ---------- EVENTOS ----------
+        listContainer.addEventListener('click', function(e) {
+            var target = e.target.closest('[data-action]');
+            if (target) {
+                var action = target.dataset.action;
+                var id = target.dataset.id;
+                if (action === 'toggle') { toggleItem(id); return; }
+                if (action === 'delete') { deleteItem(id); return; }
+                if (action === 'edit') {
+                    var idx = findItemById(id);
+                    if (idx !== -1) openEditModal(items[idx], idx);
+                    return;
+                }
+            }
+            var itemDiv = e.target.closest('.item');
+            if (itemDiv && !e.target.closest('.item-delete') && !e.target.closest('.item-check')) {
+                toggleItem(itemDiv.dataset.id);
+            }
+        });
+
+        var editTarget = null;
+        var editTimeout = null;
+
+        listContainer.addEventListener('touchstart', function(e) {
+            var textEl = e.target.closest('.item-text');
+            if (!textEl) return;
+            var id = textEl.dataset.id;
+            if (editTarget === textEl) {
+                clearTimeout(editTimeout);
+                editTarget = null;
+                var idx = findItemById(id);
+                if (idx !== -1) openEditModal(items[idx], idx);
+                e.preventDefault();
+            } else {
+                editTarget = textEl;
+                editTimeout = setTimeout(function() { editTarget = null; }, 300);
+            }
+        }, { passive: false });
+
+        addBtn.addEventListener('click', function() { addItem(input.value); });
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); addItem(input.value); }
+        });
+
+        clearCheckedBtn.addEventListener('click', clearChecked);
+        clearAllBtn.addEventListener('click', openClearAllModal);
+
+        // ---------- BARCODE SCANNER ----------
+        var scannerOverlay = document.getElementById('scannerOverlay');
+        var scannerVideo = document.getElementById('scannerVideo');
+        var scannerStatus = document.getElementById('scannerStatus');
+        var scannerClose = document.getElementById('scannerClose');
+        var barcodeScanBtn = document.getElementById('barcodeScanBtn');
+        var manualBarcodeInput = document.getElementById('manualBarcode');
+        var manualBarcodeBtn = document.getElementById('manualBarcodeBtn');
+        var barcodeDetector = null;
+        var scannerStream = null;
+        var scannerAnimFrame = null;
+
+        // Mapeamento de categorias Open Food Facts → categorias da app
+        var offCategoryMap = {
+            'bread': 'Padaria', 'bakeries': 'Padaria', 'pastries': 'Padaria', 'cakes': 'Padaria',
+            'milk': 'Laticínios', 'dairies': 'Laticínios', 'cheese': 'Laticínios', 'yogurts': 'Laticínios',
+            'butter': 'Laticínios', 'cream': 'Laticínios', 'eggs': 'Laticínios',
+            'fruits': 'Frutas', 'fresh fruits': 'Frutas', 'citrus fruits': 'Frutas',
+            'vegetables': 'Legumes', 'legumes': 'Legumes', 'root vegetables': 'Legumes',
+            'meat': 'Carnes', 'poultry': 'Carnes', 'beef': 'Carnes', 'pork': 'Carnes', 'sausages': 'Carnes',
+            'fish': 'Peixe', 'seafood': 'Peixe', 'seafood and fish': 'Peixe',
+            'cereals': 'Mercearia', 'pasta': 'Mercearia', 'rice': 'Mercearia', 'flour': 'Mercearia',
+            'sugars': 'Mercearia', 'sweeteners': 'Mercearia', 'salt': 'Mercearia',
+            'oils': 'Mercearia', 'fats': 'Mercearia', 'vinegars': 'Mercearia',
+            'coffee': 'Mercearia', 'teas': 'Mercearia', 'condiments': 'Mercearia',
+            'frozen foods': 'Congelados', 'frozen': 'Congelados', 'ice creams': 'Congelados',
+            'beverages': 'Bebidas', 'waters': 'Bebidas', 'juices': 'Bebidas',
+            'soft drinks': 'Bebidas', 'beers': 'Bebidas', 'wines': 'Bebidas',
+            'alcoholic beverages': 'Bebidas', 'fruit juices': 'Bebidas',
+            'cleaning': 'Limpeza', 'household': 'Limpeza', 'detergents': 'Limpeza',
+            'hygiene': 'Higiene', 'cosmetics': 'Higiene', 'personal care': 'Higiene'
+        };
+
+        function mapOffCategory(categories) {
+            if (!categories || !categories.length) return 'Outros';
+            for (var i = 0; i < categories.length; i++) {
+                var cat = categories[i].toLowerCase().trim();
+                if (offCategoryMap[cat]) return offCategoryMap[cat];
+                // Busca parcial
+                var keys = Object.keys(offCategoryMap);
+                for (var j = 0; j < keys.length; j++) {
+                    if (cat.indexOf(keys[j]) !== -1 || keys[j].indexOf(cat) !== -1) {
+                        return offCategoryMap[keys[j]];
+                    }
+                }
+            }
+            return 'Outros';
+        }
+
+        async function lookupBarcode(barcode) {
+            scannerStatus.textContent = 'A procurar produto...';
+            scannerStatus.className = 'scanner-status';
+            try {
+                var resp = await fetch('https://world.openfoodfacts.net/api/v2/product/' + barcode + '?fields=product_name,categories_tags_en');
+                var data = await resp.json();
+                if (data.status === 1 && data.product) {
+                    var name = data.product.product_name || data.product.product_name_pt || '';
+                    var categories = data.product.categories_tags_en || [];
+                    if (!name) {
+                        // Tenta product_name de outras línguas
+                        var keys = Object.keys(data.product);
+                        for (var k = 0; k < keys.length; k++) {
+                            if (keys[k].indexOf('product_name') === 0 && data.product[keys[k]]) {
+                                name = data.product[keys[k]];
+                                break;
+                            }
+                        }
+                    }
+                    var category = mapOffCategory(categories);
+                    if (name) {
+                        scannerStatus.textContent = '✓ ' + name;
+                        scannerStatus.className = 'scanner-status found';
+                        setTimeout(function() {
+                            closeScanner();
+                            addItem(name);
+                            // Atualiza a categoria se for diferente da auto-detetada
+                            var lastItem = items[items.length - 1];
+                            if (lastItem && lastItem.category !== category) {
+                                lastItem.category = category;
+                                saveItems();
+                            }
+                        }, 800);
+                    } else {
+                        scannerStatus.textContent = 'Código encontrado mas sem nome. Tenta digitar.';
+                        scannerStatus.className = 'scanner-status';
+                        manualBarcodeInput.value = barcode;
+                    }
+                } else {
+                    scannerStatus.textContent = 'Produto não encontrado. Tenta digitar o nome.';
+                    scannerStatus.className = 'scanner-status';
+                    manualBarcodeInput.value = barcode;
+                }
+            } catch (e) {
+                scannerStatus.textContent = 'Erro ao procurar. Verifica a internet.';
+                scannerStatus.className = 'scanner-status';
+            }
+        }
+
+        async function startScanner() {
+            // Verifica suporte
+            if (!('BarcodeDetector' in window)) {
+                scannerVideo.style.display = 'none';
+                scannerStatus.textContent = 'Câmara não suportada neste browser. Usa o campo abaixo.';
+                scannerStatus.className = 'scanner-status';
+                return;
+            }
+            try {
+                barcodeDetector = new BarcodeDetector({ formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39'] });
+            } catch (e) {
+                scannerVideo.style.display = 'none';
+                scannerStatus.textContent = 'Erro ao inicializar scanner.';
+                return;
+            }
+            try {
+                scannerStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+                });
+                scannerVideo.srcObject = scannerStream;
+                await scannerVideo.play();
+                scanLoop();
+            } catch (e) {
+                // Sem câmara (file://, sem permissão, sem dispositivo)
+                scannerVideo.style.display = 'none';
+                document.querySelector('.scanner-crosshair').style.display = 'none';
+                scannerStatus.textContent = 'Sem acesso à câmara. Digita o código de barras abaixo.';
+                scannerStatus.className = 'scanner-status';
+                manualBarcodeInput.focus();
+            }
+        }
+
+        async function scanLoop() {
+            if (!barcodeDetector || !scannerVideo || scannerVideo.paused) return;
+            try {
+                var barcodes = await barcodeDetector.detect(scannerVideo);
+                if (barcodes.length > 0) {
+                    var value = barcodes[0].rawValue;
+                    scannerStatus.textContent = '✓ Código detetado: ' + value;
+                    scannerStatus.className = 'scanner-status found';
+                    stopScanner();
+                    lookupBarcode(value);
+                    return;
+                }
+            } catch (e) { /* ignora erros de deteção */ }
+            scannerAnimFrame = requestAnimationFrame(scanLoop);
+        }
+
+        function stopScanner() {
+            if (scannerAnimFrame) { cancelAnimationFrame(scannerAnimFrame); scannerAnimFrame = null; }
+            if (scannerStream) {
+                scannerStream.getTracks().forEach(function(t) { t.stop(); });
+                scannerStream = null;
+            }
+            scannerVideo.srcObject = null;
+        }
+
+        function closeScanner() {
+            stopScanner();
+            scannerOverlay.classList.remove('open');
+            manualBarcodeInput.value = '';
+            scannerStatus.textContent = 'A procurar código de barras...';
+            scannerStatus.className = 'scanner-status';
+            scannerVideo.style.display = '';
+            document.querySelector('.scanner-crosshair').style.display = '';
+        }
+
+        barcodeScanBtn.addEventListener('click', function() {
+            scannerOverlay.classList.add('open');
+            startScanner();
+        });
+        scannerClose.addEventListener('click', closeScanner);
+        scannerOverlay.addEventListener('click', function(e) {
+            if (e.target === scannerOverlay) closeScanner();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && scannerOverlay.classList.contains('open')) {
+                closeScanner();
+            }
+        });
+
+        manualBarcodeBtn.addEventListener('click', function() {
+            var code = manualBarcodeInput.value.trim();
+            if (code) {
+                stopScanner();
+                lookupBarcode(code);
+            }
+        });
+        manualBarcodeInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                var code = manualBarcodeInput.value.trim();
+                if (code) {
+                    stopScanner();
+                    lookupBarcode(code);
+                }
+            }
+        });
+
+        // ---------- INIT ----------
+        function initApp() {
+            loadItems();
+            renderTabs();
+            render();
+            updateUndoButton();
+
+            // PWA
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./service-worker.js').catch(function() {});
+            }
+        }
+    })();
+    </script>
+</body>
+</html>
