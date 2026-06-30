@@ -324,26 +324,30 @@
         .tabs-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            padding: 2px 0 16px 0;
+            gap: 5px;
+            padding: 2px 0 14px 0;
             margin-bottom: 4px;
             border-bottom: 1px solid var(--border);
+            justify-content: center;
         }
 
         .tab-btn {
             flex: 0 0 auto;
-            padding: 7px 14px;
-            border-radius: 10px;
+            padding: 6px 11px;
+            border-radius: 8px;
             border: 1.5px solid transparent;
             background: var(--tab-bg);
             color: var(--tab-text);
-            font-size: 12.5px;
+            font-size: 12px;
             font-family: inherit;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
         .tab-btn:hover {
             background: var(--tab-hover);
@@ -354,20 +358,19 @@
             background: var(--gradient-primary);
             color: white;
             border-color: transparent;
-            box-shadow: 0 3px 12px var(--primary-glow);
+            box-shadow: 0 2px 8px var(--primary-glow);
         }
         .tab-btn .badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 18px;
-            height: 18px;
+            min-width: 16px;
+            height: 16px;
             background: var(--badge-bg);
             color: inherit;
-            border-radius: 6px;
-            padding: 0 5px;
-            margin-left: 5px;
-            font-size: 10px;
+            border-radius: 5px;
+            padding: 0 4px;
+            font-size: 9.5px;
             font-weight: 700;
             line-height: 1;
         }
@@ -456,6 +459,23 @@
             letter-spacing: 0.6px;
             margin-top: 3px;
             opacity: 0.7;
+        }
+
+        .item-qty {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 24px;
+            padding: 0 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+            flex-shrink: 0;
+            letter-spacing: -0.3px;
         }
 
         .item-delete {
@@ -1129,8 +1149,9 @@
         <div class="modal">
             <div class="modal-icon edit">✏️</div>
             <h2>Editar item</h2>
-            <p>Altera o nome do item:</p>
-            <input type="text" id="editModalInput" class="modal-input" aria-label="Novo nome do item">
+            <p>Altera os detalhes do item:</p>
+            <input type="text" id="editModalInput" class="modal-input" aria-label="Nome do item">
+            <input type="text" id="editModalQty" class="modal-input" placeholder="Quantidade (ex: 2)" inputmode="numeric" style="margin-bottom:24px" aria-label="Quantidade">
             <div class="modal-actions">
                 <button class="modal-btn modal-btn-cancel" id="editModalCancel">Cancelar</button>
                 <button class="modal-btn modal-btn-confirm" id="editModalConfirm">Guardar</button>
@@ -1264,11 +1285,13 @@
 
         // ---------- CATEGORIAS ----------
         var categoryMap = [
-            { keywords: ['pão', 'bolo', 'croissant', 'broa'], category: 'Padaria' },
+            { keywords: ['pão', 'broa'], category: 'Padaria' },
+            { keywords: ['pastel', 'queque', 'tarte', 'éclair', 'bola de berlin', 'sonho', 'torrada', 'pastéis de nata', 'croissant'], category: 'Pastelaria' },
             { keywords: ['leite', 'ovos', 'manteiga', 'queijo', 'iogurte', 'natas'], category: 'Laticínios' },
+            { keywords: ['presunto', 'fiambre', 'chouriço', 'paio', 'salame', 'morcela', 'alheira', 'linguiça', 'mortadela', 'toucinho'], category: 'Charcutaria' },
             { keywords: ['maçã', 'banana', 'laranja', 'pera', 'uva', 'melão', 'morango', 'kiwi', 'ananás', 'limão'], category: 'Frutas' },
             { keywords: ['alface', 'tomate', 'cebola', 'batata', 'cenoura', 'abóbora', 'couve', 'espinafre', 'brócolos', 'alho'], category: 'Legumes' },
-            { keywords: ['frango', 'carne', 'porco', 'vaca', 'borrego', 'peru', 'bife', 'costeleta', 'presunto'], category: 'Carnes' },
+            { keywords: ['frango', 'carne', 'porco', 'vaca', 'borrego', 'peru', 'bife', 'costeleta'], category: 'Carnes' },
             { keywords: ['salmão', 'atum', 'bacalhau', 'pescada', 'camarão', 'dourada', 'robalo'], category: 'Peixe' },
             { keywords: ['arroz', 'massa', 'esparguete', 'feijão', 'grão', 'lentilhas', 'farinha', 'açúcar', 'sal', 'azeite', 'vinagre', 'café', 'chá'], category: 'Mercearia' },
             { keywords: ['gelado', 'pizza', 'legumes congelados', 'peixe congelado', 'marisco congelado', 'sopa congelada'], category: 'Congelados' },
@@ -1277,7 +1300,7 @@
             { keywords: ['papel', 'champô', 'gel', 'pasta', 'escova', 'fralda', 'toalhita'], category: 'Higiene' }
         ];
 
-        var ALL_CATEGORIES = ['Todas', 'Padaria', 'Laticínios', 'Frutas', 'Legumes', 'Carnes', 'Peixe', 'Mercearia', 'Congelados', 'Bebidas', 'Limpeza', 'Higiene', 'Outros'];
+        var ALL_CATEGORIES = ['Todas', 'Bebidas', 'Carnes', 'Charcutaria', 'Congelados', 'Frutas', 'Higiene', 'Legumes', 'Laticínios', 'Limpeza', 'Mercearia', 'Padaria', 'Pastelaria', 'Peixe', 'Outros'];
 
         function getCategory(name) {
             var lower = name.toLowerCase().trim();
@@ -1317,6 +1340,7 @@
         var notificationEl = document.getElementById('notification');
         var editModal = document.getElementById('editModal');
         var editModalInput = document.getElementById('editModalInput');
+        var editModalQty = document.getElementById('editModalQty');
         var editModalCancel = document.getElementById('editModalCancel');
         var editModalConfirm = document.getElementById('editModalConfirm');
         var clearAllModal = document.getElementById('clearAllModal');
@@ -1362,7 +1386,8 @@
                     items = items.map(function(item) {
                         return Object.assign({}, item, {
                             checked: item.checked || false,
-                            id: item.id || generateId()
+                            id: item.id || generateId(),
+                            qty: item.qty || 1
                         });
                     });
                 } else {
@@ -1444,6 +1469,7 @@
                     if (idx !== -1) {
                         items[idx].name = data.oldName;
                         items[idx].category = data.oldCategory;
+                        items[idx].qty = data.oldQty || 1;
                         saveItems();
                         showNotification('Editado para "' + data.oldName + '"', 1500);
                     } else showNotification('Não foi possível desfazer', 1500);
@@ -1459,6 +1485,7 @@
 
         function openEditModal(item, index) {
             editModalInput.value = item.name;
+            editModalQty.value = (item.qty && item.qty > 1) ? item.qty : '';
             editModal.classList.add('open');
             setTimeout(function() {
                 editModalInput.focus();
@@ -1469,16 +1496,31 @@
                 editModal.classList.remove('open');
                 if (!confirmed) return;
                 var trimmed = editModalInput.value.trim();
-                if (trimmed === '' || trimmed === item.name) return;
+                if (trimmed === '' || trimmed === item.name) {
+                    // Só mudou a quantidade?
+                    var newQty = parseInt(editModalQty.value, 10) || 1;
+                    if (newQty !== (item.qty || 1)) {
+                        var oldQty = item.qty || 1;
+                        item.qty = newQty;
+                        pushUndo('edit', { id: item.id, oldName: item.name, oldCategory: item.category, oldQty: oldQty });
+                        saveItems();
+                        showNotification('Quantidade alterada: x' + newQty, 1500);
+                    }
+                    return;
+                }
                 var exists = items.some(function(it, i) { return i !== index && it.name.toLowerCase() === trimmed.toLowerCase(); });
                 if (exists) { showNotification('Já existe esse nome.', 1500); return; }
                 var oldName = item.name;
                 var oldCategory = item.category;
+                var oldQty = item.qty || 1;
+                var newQty = parseInt(editModalQty.value, 10) || 1;
                 item.name = trimmed;
                 item.category = getCategory(trimmed);
-                pushUndo('edit', { id: item.id, oldName: oldName, oldCategory: oldCategory });
+                item.qty = newQty;
+                pushUndo('edit', { id: item.id, oldName: oldName, oldCategory: oldCategory, oldQty: oldQty });
                 saveItems();
-                showNotification('Editado: "' + oldName + '" → "' + trimmed + '"', 1500);
+                var qtyText = newQty > 1 ? ' (x' + newQty + ')' : '';
+                showNotification('Editado: "' + oldName + '" → "' + trimmed + '"' + qtyText, 1500);
             };
         }
 
@@ -1526,8 +1568,9 @@
             ALL_CATEGORIES.forEach(function(cat) {
                 var count = counts[cat] || 0;
                 var activeClass = (activeCategory === cat) ? ' active' : '';
+                var badgeHtml = count > 0 ? '<span class="badge">' + count + '</span>' : '';
                 html += '<button class="tab-btn' + activeClass + '" data-category="' + cat + '" role="tab" aria-selected="' + (activeCategory === cat) + '">' +
-                    cat + '<span class="badge">' + count + '</span></button>';
+                    cat + badgeHtml + '</button>';
             });
             tabsContainer.innerHTML = html;
 
@@ -1573,11 +1616,13 @@
             filteredItems.forEach(function(item) {
                 var checkedClass = item.checked ? ' checked' : '';
                 var textClass = item.checked ? ' checked-text' : '';
+                var qty = item.qty || 1;
+                var qtyBadge = qty > 1 ? '<span class="item-qty">x' + qty + '</span>' : '';
                 html +=
                     '<div class="item" role="listitem" data-id="' + item.id + '">' +
                         '<div class="item-check' + checkedClass + '" data-action="toggle" data-id="' + item.id + '" aria-label="' + (item.checked ? 'Desmarcar' : 'Marcar') + ' ' + escapeHtml(item.name) + '" role="checkbox" aria-checked="' + item.checked + '"></div>' +
                         '<div class="item-body">' +
-                            '<div class="item-text' + textClass + '" data-action="edit" data-id="' + item.id + '">' + escapeHtml(item.name) + '</div>' +
+                            '<div class="item-text' + textClass + '" data-action="edit" data-id="' + item.id + '">' + escapeHtml(item.name) + qtyBadge + '</div>' +
                             '<div class="item-category">' + escapeHtml(item.category) + '</div>' +
                         '</div>' +
                         '<button class="item-delete" data-action="delete" data-id="' + item.id + '" aria-label="Remover ' + escapeHtml(item.name) + '">&times;</button>' +
@@ -1606,17 +1651,28 @@
         function addItem(name) {
             var trimmed = name.trim();
             if (trimmed === '') return false;
+
+            // Parse quantidade: "Leite x2" → name: "Leite", qty: 2
+            var qty = 1;
+            var qtyMatch = trimmed.match(/\sx(\d+)$/i);
+            if (qtyMatch) {
+                qty = parseInt(qtyMatch[1], 10);
+                trimmed = trimmed.replace(/\sx\d+$/i, '').trim();
+            }
+            if (qty < 1) qty = 1;
+
             var exists = items.some(function(item) { return item.name.toLowerCase() === trimmed.toLowerCase(); });
             if (exists) { showInputError(); return false; }
 
             var category = getCategory(trimmed);
-            var newItem = { id: generateId(), name: trimmed, category: category, checked: false };
+            var newItem = { id: generateId(), name: trimmed, category: category, qty: qty, checked: false };
             items.push(newItem);
             pushUndo('add', Object.assign({}, newItem));
             saveItems();
             input.value = '';
             input.focus();
-            showNotification('Adicionado: "' + trimmed + '"', 1000);
+            var qtyText = qty > 1 ? ' (x' + qty + ')' : '';
+            showNotification('Adicionado: "' + trimmed + '"' + qtyText, 1000);
             return true;
         }
 
@@ -1632,7 +1688,9 @@
             item.checked = !item.checked;
             pushUndo('toggle', { id: item.id, name: item.name, previousState: previousState });
             saveItems();
-            showNotification(item.checked ? '✓ ' + item.name : '↺ ' + item.name, 800);
+            var qty = item.qty || 1;
+            var qtyText = qty > 1 ? ' (x' + qty + ')' : '';
+            showNotification(item.checked ? '✓ ' + item.name + qtyText : '↺ ' + item.name + qtyText, 800);
         }
 
         function deleteItem(id) {
